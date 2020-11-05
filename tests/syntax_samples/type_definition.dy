@@ -1,0 +1,11 @@
+
+
+type myInt = myInt (mint : int);
+
+type poInt = poInt (i1: int) (i2 : int);
+
+type tree a = {Node a (left: tree a) (right: tree a);
+  Leaf;
+}
+
+
