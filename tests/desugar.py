@@ -20,8 +20,9 @@ class TestDeSugar(unittest.TestCase):
         tree = parse(
             base_path / "type_definition.dy", "test_new_type"
         )
-
         print(tree.pretty())
+        for i in tree.children:
+            print(repr(i))
 
 
 if __name__ == "__main__":

@@ -12,7 +12,7 @@ ARROW.6 : "->"
 
 TYPE_KEYWORD.5 : "type"
 
-?type_atom : IDENTIFIER
+type_atom : IDENTIFIER
   | "(" type_expression ")"
   
 ?type_constructor : type_atom (type_atom)*
@@ -21,13 +21,13 @@ TYPE_KEYWORD.5 : "type"
 
 ?type_expression : type_function
 
-type_annotation : ":" type_expression+
+type_annotation : ":" type_expression
 
 new_type_type_vars : IDENTIFIER+
 
 new_type : TYPE_KEYWORD IDENTIFIER [new_type_type_vars] "=" (new_type_constructor | ("{" new_type_constructor+ "}"))
 
-?new_type_constructor_inner :  IDENTIFIER
+new_type_constructor_inner :  IDENTIFIER
  | "(" IDENTIFIER type_annotation ")"  
 
 new_type_constructor : IDENTIFIER new_type_constructor_inner* ";"
