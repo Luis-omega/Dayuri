@@ -1,0 +1,31 @@
+
+SPACE : " "|"\t"|"\n"
+
+%ignore SPACE
+
+
+IDENTIFIER : /(?=\D)\w+/u
+
+UINT : /([1-9][0-9_]*)|(0(0|_)*)/
+
+ARROW.6 : "->"
+
+TYPE_KEYWORD.5 : "type"
+
+type_atom : IDENTIFIER
+  | "(" type_expression ")"
+
+type_function : type_atom ("->" type_atom)*
+
+type_expression : type_function
+
+type_annotation : ":" type_expression+
+
+new_type : TYPE_KEYWORD IDENTIFIER+ "=" (new_type_constructor | ("{" new_type_constructor+ "}"))
+
+new_type_constructor : IDENTIFIER (("(" IDENTIFIER type_annotation ")") | IDENTIFIER )* ";"
+
+
+
+
+test_new_type : new_type+
