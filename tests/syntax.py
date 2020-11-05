@@ -10,7 +10,8 @@ def parse(path, rule_name):
     with open(path, "r") as fh:
         source = fh.read()
     parser = gen_parser(rule_name)
-    parser.parse(source)
+    tree = parser.parse(source)
+    # print(tree.pretty())
 
 
 class TestSyntax(unittest.TestCase):
