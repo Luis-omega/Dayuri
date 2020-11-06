@@ -11,6 +11,11 @@ All phases include the steps
 
 Current roadmap just have two steps
 
+- Recognize simply typed lambda calculus type expression with just int as type
+  + `int`
+  + `int->int`
+  + `int->(int->int)->int`
+
 - Make simple upper level variable binding work with just int types
   + `some : int = 1;`
 - Add new types definition but only with integer members
