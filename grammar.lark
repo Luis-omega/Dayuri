@@ -10,22 +10,17 @@ UINT : /([1-9][0-9_]*)|(0(0|_)*)/
 
 ARROW.6 : "->"
 
-type_expression : IDENTIFIER
+BASE_TYPES.10 : "int"
 
-type_annotation : ":" type_expression
+type_atom: BASE_TYPES
+  | "(" type_expression ")"
 
-upper_level_variable_annotation : IDENTIFIER type_annotation ";"
+type_arrow: type_atom (ARROW type_atom)*
 
-upper_level_variable_binding : IDENTIFIER "=" expression ";"
-
-expression : UINT
-
-upper_level_variable_annotation_and_binding : IDENTIFIER type_annotation "=" expression ";"
-
-upper_level: upper_level_variable_annotation_and_binding
-  | upper_level_variable_binding
-  | upper_level_variable_annotation
+type_expression : type_arrow 
 
 
 
-test_binding : upper_level+
+
+
+test_type_expression : (type_expression ";")+

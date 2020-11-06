@@ -1,5 +1,6 @@
-from lark import Lark, Transformer
-from typing import Optional
+from typing import Optional, Union, List
+
+from lark import Lark, Transformer, Tree, Token
 
 with open("grammar.lark", "r") as fh:
     grammar = fh.read()
@@ -29,3 +30,74 @@ def gen_parser(
         keep_all_tokens=True,
         parser="lalr",
     )
+
+
+class Desugar(Transformer):
+    def type_atom(nodes):
+        if len(nodes) == 1:
+            return BaseTypeInt
+        return nodes[1]
+
+    def type_arrow(nodes):
+        if len(nodes) == 1:
+            return nodes[0]
+        nodes = nodes[::-1]
+        codomain = nodes[0]
+        for domain in nodes[2::2]:
+            codomain = Tree("arrow", [domain, codomain])
+        return codomain
+
+    def type_expression(nodes):
+        return nodes[0]
+
+
+class DayuriType:
+    pass
+
+
+class BaseType(DayuriType):
+    pass
+
+
+class BaseTypeInt(BaseType):
+    pass
+
+
+map_string2types_aux = {"int": BaseTypeInt}
+
+
+def name2type(name: str) -> Optional[BaseType]:
+    return map_string2types_aux.get(name, None)
+
+
+class Arrow(DayuriType):
+    def __init__(
+        self,
+        domain: Union[BaseType, "Arrow"],
+        codomain: Union[BaseType, "Arrow"],
+    ):
+        self.domain = domain
+        self.codomain = codomain
+
+    def __str__(self):
+        return f"({self.domain}->{self.codomain})"
+
+
+class Desugar2Ast(Transformer):
+    @staticmethod
+    def arrow(nodes):
+        left, right = nodes
+        if isinstance(left, Token):
+            left = name2type(left)
+        if isinstance(right, Token):
+            right = name2type(right)
+        return Arrow(left, right)
+
+
+def ast2string(node: DayuriType):
+    if isinstance(node, Arrow):
+        left = ast2string(node.domain)
+        right = ast2string(node.codomain)
+        return f"({left}->{right})"
+    if node is BaseTypeInt:
+        return "int"
