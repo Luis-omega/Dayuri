@@ -10,29 +10,22 @@ UINT : /([1-9][0-9_]*)|(0(0|_)*)/
 
 ARROW.6 : "->"
 
-TYPE_KEYWORD.5 : "type"
-
-type_atom : IDENTIFIER
-  | "(" type_expression ")"
-  
-?type_constructor : type_atom (type_atom)*
-
-?type_function : type_constructor ("->" type_constructor)*
-
-?type_expression : type_function
+type_expression : IDENTIFIER
 
 type_annotation : ":" type_expression
 
-new_type_type_vars : IDENTIFIER+
+upper_level_variable_annotation : IDENTIFIER type_annotation ";"
 
-new_type : TYPE_KEYWORD IDENTIFIER [new_type_type_vars] "=" (new_type_constructor | ("{" new_type_constructor+ "}"))
+upper_level_variable_binding : IDENTIFIER "=" expression ";"
 
-new_type_constructor_inner :  IDENTIFIER
- | "(" IDENTIFIER type_annotation ")"  
+expression : UINT
 
-new_type_constructor : IDENTIFIER new_type_constructor_inner* ";"
+upper_level_variable_annotation_and_binding : IDENTIFIER type_annotation "=" expression ";"
+
+upper_level: upper_level_variable_annotation_and_binding
+  | upper_level_variable_binding
+  | upper_level_variable_annotation
 
 
 
-
-test_new_type : new_type+
+test_binding : upper_level+

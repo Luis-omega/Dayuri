@@ -1,0 +1,7 @@
+
+some : int ; 
+
+some = 2;
+
+some1 : int = 4;
+
