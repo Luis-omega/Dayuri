@@ -9,6 +9,8 @@ All phases include the steps
 + ast
 + compile to python code
 
+Current roadmap just have two steps
+
 - Make simple upper level variable binding work with just int types
   + `some : int = 1;`
 - Add new types definition but only with integer members
