@@ -1,0 +1,5 @@
+some : int;
+
+some1 : int -> int;
+
+some2 : int ->(int -> int)->int;

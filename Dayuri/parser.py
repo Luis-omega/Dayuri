@@ -1,4 +1,4 @@
-from typing import Optional, Union, List
+from typing import Optional, Union, Type, TypeVar
 
 from lark import Lark, Transformer, Tree, Token
 
@@ -50,37 +50,44 @@ class Desugar(Transformer):
     def type_expression(nodes):
         return nodes[0]
 
-
-class DayuriType:
-    pass
-
-
-class BaseType(DayuriType):
-    pass
+    def declaration(nodes):
+        return Tree("declaration", [nodes[0], nodes[2]])
 
 
-class BaseTypeInt(BaseType):
+
+
+DayuriType = Union["Type[BaseTypeInt]", "Arrow"]
+
+class BaseTypeInt:
     pass
 
 
 map_string2types_aux = {"int": BaseTypeInt}
 
 
-def name2type(name: str) -> Optional[BaseType]:
+def name2type(name: str) -> Optional[DayuriType]:
     return map_string2types_aux.get(name, None)
 
 
-class Arrow(DayuriType):
+
+class Arrow:
     def __init__(
         self,
-        domain: Union[BaseType, "Arrow"],
-        codomain: Union[BaseType, "Arrow"],
+        domain: DayuriType,
+        codomain: DayuriType,
     ):
         self.domain = domain
         self.codomain = codomain
 
     def __str__(self):
         return f"({self.domain}->{self.codomain})"
+
+
+class Declaration:
+    def __init__(self, name:str, domain: DayuriType):
+        self.name = name
+        self.domain = domain
+
 
 
 class Desugar2Ast(Transformer):
@@ -92,6 +99,11 @@ class Desugar2Ast(Transformer):
         if isinstance(right, Token):
             right = name2type(right)
         return Arrow(left, right)
+   
+    @staticmethod
+    def declaration(nodes):
+        name, domain = nodes
+        return Declaration(name, domain)
 
 
 def ast2string(node: DayuriType):
@@ -99,5 +111,9 @@ def ast2string(node: DayuriType):
         left = ast2string(node.domain)
         right = ast2string(node.codomain)
         return f"({left}->{right})"
+    if isinstance(node, Declaration):
+        domain = ast2string(node.domain)
+        return f"{node.name} : {domain};"
     if node is BaseTypeInt:
         return "int"
+

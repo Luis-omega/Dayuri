@@ -19,8 +19,12 @@ type_arrow: type_atom (ARROW type_atom)*
 
 type_expression : type_arrow 
 
+declaration : IDENTIFIER ":" type_expression 
 
+statement : declaration ";"
 
 
 
 test_type_expression : (type_expression ";")+
+
+test_declaration : (declaration ";") +
