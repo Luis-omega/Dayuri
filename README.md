@@ -22,7 +22,7 @@ All phases include the steps
   + `int->int`
   + `int->(int->int)->int`
 
-- [ ] Add variable declaration
+- [x] Add variable declaration
   + `some : int;`
   + `some1 : int->int; `
 
